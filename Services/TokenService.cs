@@ -1,4 +1,5 @@
 using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using System.Text;
 using ApiAuth.Models;
 using Microsoft.IdentityModel.Tokens;
@@ -14,6 +15,12 @@ public class TokenService
 
         var tokenDescriptor = new SecurityTokenDescriptor
         {
+            Subject = new ClaimsIdentity(new Claim[]
+            {
+                new (ClaimTypes.Name, "username"), // User.Identity.Name
+                new (ClaimTypes.Role, "admin"), // User.IsInRole
+                new ("CDomain", "DomainToken")
+            }),
             Expires = DateTime.UtcNow.AddHours(8),
             SigningCredentials = new SigningCredentials(
                 new SymmetricSecurityKey(key),
